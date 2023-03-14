@@ -8,23 +8,26 @@
 #define in3 4
 #define in4 5
 
-#define FAR_LEFT_SENSOR A0
+//Infrared sensors
 #define LEFT_SENSOR A1
 #define MIDDLE_SENSOR A2
 #define RIGHT_SENSOR A3
-#define FAR_RIGHT_SENSOR A5
 
+//Motor speeds
 int const rightSpeed = 70;
 int const leftSpeed = 70;
 
+//bluetooth mode 
 bool bluetoothMode = false;
 
+//stop time
 unsigned long crossSectionTime = 0;
 
+//if threshold Lower than 500 line is detected, if not line is not detected
 int const LINE_THRESHOLD = 500;
 
 void setup() {
-  // put your setup code here, to run once:
+  // declaring output  pins, Analog pins does not need to be declared
   pinMode(in1, OUTPUT);
   pinMode(in2, OUTPUT);
   pinMode(in3, OUTPUT);
@@ -32,9 +35,11 @@ void setup() {
   pinMode(enA, OUTPUT);
   pinMode(enB, OUTPUT);
 
+  //Serial1 is from ARDUINO MEGA this can be achieved by UNO board by using the SoftwareSerial.h header.
   Serial.begin(9600);
   Serial1.begin(9600);
 
+  //Interrupt to detect bluetooth commands
   attachInterrupt(digitalPinToInterrupt(19), handleBluetoothMessage, CHANGE);
 }
 
@@ -103,6 +108,7 @@ void handleBluetoothMessage() {
         stop();
         bluetoothMode = false;
         break;
+      //Additional Command to exit from the bluetooth mode. optional
       case 'W':
         bluetoothMode = false;
         break;
@@ -115,7 +121,7 @@ void handleBluetoothMessage() {
 }
 
 
-// Functions for motor control
+// Functions for motor driver
 void forward() {
   digitalWrite(in1, HIGH);
   digitalWrite(in2, LOW);
